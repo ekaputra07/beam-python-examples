@@ -11,12 +11,12 @@ pip install apache-beam[gcp]
 
 **Run using Direct Runner (local)**
 ```
-python wordcount.py
+python pipeline.py
 ```
 
 **Run on Cloud Dataflow**
 ```
-python wordcount.py \
+python pipeline.py \
 --input=gs://dataflow-samples/shakespeare/kinglear.txt \
 --output=gs://my-bucket/wordcount/output \
 --runner=DataFlowRunner \

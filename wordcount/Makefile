@@ -3,10 +3,10 @@ export GCS_BUCKET=my-bucket
 export GCP_REGION=us-central1
 
 run-direct:
-	rm -rf output && python wordcount.py
+	rm -rf output && python pipeline.py
 
 run-dataflow:
-	python wordcount.py \
+	python pipeline.py \
 	--input=gs://dataflow-samples/shakespeare/kinglear.txt \
 	--output=gs://$(GCS_BUCKET)/wordcount/output \
 	--runner=DataFlowRunner \

@@ -9,13 +9,13 @@ import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, SetupOptions
 
 
-class WordCountOptions(PipelineOptions):
+class MyOptions(PipelineOptions):
     @classmethod
     def _add_argparse_args(cls, parser):
         parser.add_argument(
             '--input',
             dest='input',
-            default='data/*',
+            default='../_data/*',
             help='Input file to process.'
         )
         parser.add_argument(
@@ -39,7 +39,6 @@ class CountWords(beam.PTransform):
 
 class FormatAsText(beam.DoFn):
     def process(self, element):
-        print(element)
         word, count = element
         yield '%s: %s' % (word, count)  # use yield instead of return
 
@@ -47,17 +46,17 @@ class FormatAsText(beam.DoFn):
 def run(save_main_session=True):
     """main entry point"""
 
-    pipeline_options = WordCountOptions()
-    pipeline_options.view_as(
+    opts = MyOptions()
+    opts.view_as(
         SetupOptions).save_main_session = save_main_session
 
-    with beam.Pipeline(options=pipeline_options) as pipeline:
+    with beam.Pipeline(options=opts) as pipeline:
         (
             pipeline
-            | 'read lines' >> beam.io.ReadFromText(pipeline.options.input)
+            | 'read lines' >> beam.io.ReadFromText(opts.input)
             | CountWords()
             | 'Format result' >> beam.ParDo(FormatAsText())
-            | 'Write results' >> beam.io.WriteToText(pipeline.options.output)
+            | 'Write results' >> beam.io.WriteToText(opts.output)
         )
 
 
